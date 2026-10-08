@@ -71,15 +71,10 @@ body {
   width: 42px;
   height: 42px;
   border-radius: 12px;
-  background: linear-gradient(135deg, var(--accent), #7c3aed);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 20px;
-  color: #fff;
+  object-fit: cover;
   box-shadow: 0 8px 24px rgba(108, 92, 231, 0.3);
   flex-shrink: 0;
+  display: block;
 }
 
 .brand-title {
@@ -577,7 +572,7 @@ body {
   .card { padding: 18px; border-radius: 16px; }
   .brand-title { font-size: 14px; }
   .brand-sub { display: none; }
-  .logo { width: 36px; height: 36px; font-size: 18px; }
+  .logo { width: 36px; height: 36px; }
   .footer-inner { flex-direction: column; text-align: center; }
   .modal-content { padding: 22px; }
   .badge { display: none; }

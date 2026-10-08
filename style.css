@@ -566,6 +566,64 @@ body {
   font-size: 18px;
 }
 
+/* === Floating Add Network Button === */
+.fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 90;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, var(--accent), var(--purple));
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 28px rgba(108, 92, 231, 0.45);
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.fab:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 40px rgba(108, 92, 231, 0.6);
+}
+
+.fab:active {
+  transform: translateY(-1px);
+}
+
+.fab:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.fab-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.fab.loading .fab-icon {
+  animation: spin 1s linear infinite;
+}
+
+.fab.success {
+  background: linear-gradient(135deg, var(--success), #00b377);
+  box-shadow: 0 8px 28px rgba(0, 214, 143, 0.45);
+}
+
+.fab.error {
+  background: linear-gradient(135deg, var(--error), #cc2c57);
+  box-shadow: 0 8px 28px rgba(255, 61, 113, 0.45);
+}
+
 /* === Mobil === */
 @media (max-width: 600px) {
   .container { padding: 0 12px; }
@@ -579,4 +637,16 @@ body {
   .author-text { display: none; }
   .author { padding: 4px; }
   .author-avatar { width: 32px; height: 32px; }
+
+  .fab {
+    bottom: 16px;
+    right: 16px;
+    padding: 14px;
+    width: 52px;
+    height: 52px;
+    justify-content: center;
+  }
+  .fab-label {
+    display: none;
+  }
 }

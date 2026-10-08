@@ -46,6 +46,7 @@ const explorerLink = $("explorerLink");
 const walletModal = $("walletModal");
 const walletList = $("walletList");
 const closeModalBtn = $("closeModal");
+const addNetworkBtn = $("addNetworkBtn");
 
 // === State ===
 let provider = null;
@@ -122,7 +123,7 @@ function detectWallets() {
 }
 
 // === Wallet Selector Modal ===
-function showWalletSelector(wallets) {
+function showWalletSelector(wallets, callback) {
   walletList.innerHTML = "";
 
   wallets.forEach((w) => {
@@ -135,7 +136,11 @@ function showWalletSelector(wallets) {
     `;
     btn.addEventListener("click", () => {
       walletModal.classList.add("hidden");
-      connectWallet(w.provider);
+      if (typeof callback === "function") {
+        callback(w.provider);
+      } else {
+        connectWallet(w.provider);
+      }
     });
     walletList.appendChild(btn);
   });
@@ -226,7 +231,6 @@ function resetConnectBtn() {
 // === Disconnect Wallet ===
 async function disconnectWallet() {
   try {
-    // Bəzi cüzdanlar (MetaMask) wallet_revokePermissions dəstəkləyir
     if (activeProvider && activeProvider.request) {
       try {
         await activeProvider.request({
@@ -234,21 +238,18 @@ async function disconnectWallet() {
           params: [{ eth_accounts: {} }],
         });
       } catch (e) {
-        // Bəzi cüzdanlar bu metodu dəstəkləmir — sükutla keç
         console.warn("wallet_revokePermissions not supported:", e);
       }
     }
   } catch (err) {
     console.error(err);
   } finally {
-    // Yerli vəziyyəti sıfırla
     provider = null;
     signer = null;
     currentAccount = null;
     currentChainId = null;
     activeProvider = null;
 
-    // UI-ı sıfırla
     walletBadge.classList.add("hidden");
     walletInfo.classList.add("hidden");
     connectBtn.classList.remove("hidden");
@@ -398,11 +399,166 @@ function resetDeployBtn() {
   `;
 }
 
+// === Add QMS Network (Floating Button) ===
+async function addQMSNetwork() {
+  try {
+    let eth = activeProvider;
+
+    if (!eth) {
+      const wallets = detectWallets();
+
+      if (wallets.length === 0) {
+        showStatus(
+          "error",
+          "No EVM wallet detected. Please install MetaMask, Rabby, OKX Wallet, or another EVM-compatible wallet."
+        );
+        return;
+      }
+
+      if (wallets.length === 1) {
+        eth = wallets[0].provider;
+      } else {
+        showWalletSelector(wallets, (p) => {
+          activeProvider = p;
+          addQMSNetworkWithProvider(p);
+        });
+        return;
+      }
+    }
+
+    await addQMSNetworkWithProvider(eth);
+  } catch (err) {
+    console.error("Add network error:", err);
+  }
+}
+
+async function addQMSNetworkWithProvider(eth) {
+  try {
+    setFabLoading(addNetworkBtn, true);
+
+    let alreadyAdded = false;
+    try {
+      await eth.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: QMS_CHAIN_ID_HEX }],
+      });
+      alreadyAdded = true;
+    } catch (switchError) {
+      if (switchError.code === 4902 || switchError.code === -32603) {
+        alreadyAdded = false;
+      } else if (switchError.code === 4001) {
+        showStatus("error", "Rejected by user.");
+        resetFab(addNetworkBtn);
+        return;
+      } else {
+        alreadyAdded = false;
+      }
+    }
+
+    if (alreadyAdded) {
+      setFabSuccess(addNetworkBtn, "✓ QMS Network Ready");
+      showStatus("success", "✅ QMS Testnet is already added. Switched successfully.");
+      setTimeout(() => window.location.reload(), 1200);
+      return;
+    }
+
+    await eth.request({
+      method: "wallet_addEthereumChain",
+      params: [
+        {
+          chainId: QMS_CHAIN_ID_HEX,
+          chainName: "QMS Testnet",
+          nativeCurrency: {
+            name: "QMS",
+            symbol: "QMS",
+            decimals: 18,
+          },
+          rpcUrls: [QMS_RPC_URL],
+          blockExplorerUrls: [QMS_EXPLORER_URL],
+        },
+      ],
+    });
+
+    setFabSuccess(addNetworkBtn, "✓ QMS Network Added");
+    showStatus("success", "✅ QMS Testnet added successfully!");
+
+    setTimeout(() => window.location.reload(), 1200);
+  } catch (err) {
+    console.error("Add network error:", err);
+
+    let msg = err.message || "Failed to add QMS Testnet.";
+    if (err.code === 4001 || err.code === "ACTION_REJECTED") {
+      msg = "Rejected by user.";
+    }
+
+    setFabError(addNetworkBtn, "✗ Failed");
+    showStatus("error", msg);
+
+    setTimeout(() => {
+      resetFab(addNetworkBtn);
+    }, 3000);
+  }
+}
+
+// === FAB Helpers ===
+function setFabLoading(btn, loading) {
+  if (loading) {
+    btn.disabled = true;
+    btn.classList.add("loading");
+    btn.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="fab-icon">
+        <circle cx="12" cy="12" r="10" stroke-opacity="0.3"></circle>
+        <path d="M12 2a10 10 0 0110 10" stroke-linecap="round"></path>
+      </svg>
+      <span class="fab-label">Adding...</span>
+    `;
+  }
+}
+
+function setFabSuccess(btn, text) {
+  btn.disabled = false;
+  btn.classList.remove("loading");
+  btn.classList.add("success");
+  btn.innerHTML = `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="fab-icon">
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+    <span class="fab-label">${text}</span>
+  `;
+}
+
+function setFabError(btn, text) {
+  btn.disabled = false;
+  btn.classList.remove("loading");
+  btn.classList.add("error");
+  btn.innerHTML = `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="fab-icon">
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+    <span class="fab-label">${text}</span>
+  `;
+}
+
+function resetFab(btn) {
+  btn.disabled = false;
+  btn.classList.remove("loading", "success", "error");
+  btn.innerHTML = `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="fab-icon">
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" y1="8" x2="12" y2="16" />
+      <line x1="8" y1="12" x2="16" y2="12" />
+    </svg>
+    <span class="fab-label">Add QMS Network</span>
+  `;
+}
+
 // === Event Listeners ===
 connectBtn.addEventListener("click", () => connectWallet());
 disconnectBtn.addEventListener("click", disconnectWallet);
 switchBtn.addEventListener("click", () => switchToQMS(activeProvider));
 deployBtn.addEventListener("click", deployContract);
+addNetworkBtn.addEventListener("click", addQMSNetwork);
 
 // === Auto-connect ===
 async function autoConnect() {
@@ -426,7 +582,6 @@ function attachProviderEvents(eth) {
   if (!eth || !eth.on) return;
   eth.on("accountsChanged", (accounts) => {
     if (accounts.length === 0) {
-      // İstifadəçi cüzdandan çıxdı
       disconnectWallet();
     } else {
       connectWallet(activeProvider);

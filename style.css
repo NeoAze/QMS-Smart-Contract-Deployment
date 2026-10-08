@@ -1,0 +1,587 @@
+/* === Əsas Sıfırlama === */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #0a0a0f;
+  --card: #12121a;
+  --border: #1e1e2e;
+  --accent: #6c5ce7;
+  --accent-hover: #7d6ff0;
+  --text: #e2e2f0;
+  --muted: #8888a8;
+  --success: #00d68f;
+  --error: #ff3d71;
+  --purple: #8b5cf6;
+}
+
+body {
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  background: radial-gradient(ellipse at top, #1a1a2e 0%, #0a0a0f 60%);
+  background-attachment: fixed;
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+}
+
+.mono {
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+}
+
+.container {
+  max-width: 780px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* === Başlıq === */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid var(--border);
+  background: rgba(10, 10, 15, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 14px;
+  padding-bottom: 14px;
+  gap: 12px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent), #7c3aed);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 20px;
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(108, 92, 231, 0.3);
+  flex-shrink: 0;
+}
+
+.brand-title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.brand-sub {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 1px;
+}
+
+/* === Header sağ tərəf — Author === */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px 6px 6px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  text-decoration: none;
+  color: var(--text);
+  transition: all 0.2s ease;
+}
+
+.author:hover {
+  border-color: var(--accent);
+  background: rgba(108, 92, 231, 0.08);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(108, 92, 231, 0.2);
+}
+
+.author-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--accent);
+  flex-shrink: 0;
+}
+
+.author-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.author-by {
+  font-size: 9px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.author-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* === Nişanlar === */
+.badge {
+  font-size: 11px;
+  color: var(--muted);
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.badge-success {
+  color: var(--success);
+  background: rgba(0, 214, 143, 0.1);
+  border-color: rgba(0, 214, 143, 0.3);
+}
+
+.tag {
+  font-size: 11px;
+  color: var(--muted);
+  background: var(--bg);
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-family: "JetBrains Mono", monospace;
+}
+
+/* === Əsas === */
+.main {
+  flex: 1;
+  padding-top: 32px;
+  padding-bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* === Status === */
+.status {
+  padding: 14px 18px;
+  border-radius: 14px;
+  font-size: 14px;
+  border: 1px solid transparent;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.status.success {
+  background: rgba(0, 214, 143, 0.1);
+  border-color: rgba(0, 214, 143, 0.3);
+  color: var(--success);
+}
+
+.status.error {
+  background: rgba(255, 61, 113, 0.1);
+  border-color: rgba(255, 61, 113, 0.3);
+  color: var(--error);
+}
+
+.status.info {
+  background: rgba(108, 92, 231, 0.1);
+  border-color: rgba(108, 92, 231, 0.3);
+  color: var(--accent-hover);
+}
+
+/* === Kart === */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px;
+  transition: opacity 0.2s ease;
+}
+
+.card.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  gap: 12px;
+}
+
+.card-head h2 {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+/* === Düymələr === */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px 24px;
+  border: none;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(108, 92, 231, 0.35);
+}
+
+.btn-gradient {
+  background: linear-gradient(90deg, var(--accent), var(--purple));
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(108, 92, 231, 0.25);
+}
+
+.btn-gradient:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 32px rgba(108, 92, 231, 0.4);
+}
+
+.btn-secondary {
+  background: rgba(108, 92, 231, 0.15);
+  color: var(--accent-hover);
+  font-size: 13px;
+  padding: 10px 16px;
+}
+
+.btn-secondary:hover {
+  background: rgba(108, 92, 231, 0.25);
+}
+
+.btn-outline {
+  background: rgba(108, 92, 231, 0.1);
+  color: var(--accent-hover);
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.btn-outline:hover {
+  background: rgba(108, 92, 231, 0.2);
+}
+
+/* === Disconnect düyməsi === */
+.btn-danger {
+  background: rgba(255, 61, 113, 0.1);
+  color: var(--error);
+  font-size: 13px;
+  padding: 10px 16px;
+  border: 1px solid rgba(255, 61, 113, 0.25);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: rgba(255, 61, 113, 0.2);
+  border-color: rgba(255, 61, 113, 0.5);
+}
+
+.btn-danger .icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* === Cüzdan məlumatı === */
+.wallet-info {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg);
+  border-radius: 12px;
+  padding: 12px 16px;
+  gap: 12px;
+}
+
+.info-label {
+  font-size: 13px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.info-value {
+  font-size: 13px;
+  font-weight: 500;
+  text-align: right;
+  word-break: break-all;
+}
+
+.info-value.success {
+  color: var(--success);
+}
+
+.info-value.error {
+  color: var(--error);
+}
+
+/* === Kod === */
+.code-preview {
+  background: var(--bg);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 18px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.6;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.hint {
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 12px;
+}
+
+.hint.error {
+  color: var(--error);
+}
+
+/* === Nəticə === */
+.result-card {
+  border-color: rgba(0, 214, 143, 0.3) !important;
+}
+
+.result-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--success);
+  margin-bottom: 18px;
+}
+
+.result-item {
+  background: var(--bg);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+
+.result-label {
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.result-value {
+  font-size: 13px;
+  word-break: break-all;
+  line-height: 1.5;
+}
+
+.result-link {
+  font-size: 13px;
+  color: var(--accent-hover);
+  word-break: break-all;
+  text-decoration: none;
+  line-height: 1.5;
+  display: block;
+}
+
+.result-link:hover {
+  text-decoration: underline;
+}
+
+/* === Altlıq === */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 20px 0;
+  margin-top: auto;
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--muted);
+  flex-wrap: wrap;
+}
+
+.accent {
+  color: var(--accent-hover);
+}
+
+.footer-links {
+  display: flex;
+  gap: 18px;
+}
+
+.footer-links a {
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-links a:hover {
+  color: var(--accent-hover);
+}
+
+/* === Köməkçi === */
+.hidden {
+  display: none !important;
+}
+
+/* === Yükləmə fırlanması === */
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* === Modal === */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+}
+
+.modal-content {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: modalIn 0.2s ease;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.modal-sub {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
+.wallet-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.wallet-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 18px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+  transition: all 0.2s ease;
+  width: 100%;
+  text-align: left;
+}
+
+.wallet-option:hover {
+  border-color: var(--accent);
+  background: rgba(108, 92, 231, 0.08);
+  transform: translateY(-1px);
+}
+
+.wallet-arrow {
+  color: var(--accent-hover);
+  font-size: 18px;
+}
+
+/* === Mobil === */
+@media (max-width: 600px) {
+  .container { padding: 0 12px; }
+  .card { padding: 18px; border-radius: 16px; }
+  .brand-title { font-size: 14px; }
+  .brand-sub { display: none; }
+  .logo { width: 36px; height: 36px; font-size: 18px; }
+  .footer-inner { flex-direction: column; text-align: center; }
+  .modal-content { padding: 22px; }
+  .badge { display: none; }
+  .author-text { display: none; }
+  .author { padding: 4px; }
+  .author-avatar { width: 32px; height: 32px; }
+}

@@ -2,7 +2,7 @@
 const QMS_CHAIN_ID = 19480;
 const QMS_CHAIN_ID_HEX = "0x4c18";
 const QMS_RPC_URL = "https://rpc.testnet.qms.finance";
-const QMS_EXPLORER_URL = "https://explorer.testnet.qms.finance";
+const QMS_EXPLORER_URL = "https://testnet.qmsscan.io";
 
 // === Sample Storage Contract ===
 const STORAGE_ABI = [

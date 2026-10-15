@@ -1,17 +1,17 @@
 # QMS Smart Contract Deployment
 
-QMS Testnet üçün sadə smart contract yerləşdirmə saytı.
+A simple smart contract deployment website for QMS Testnet.
 
-## Xüsusiyyətlər
-- MetaMask ilə təhlükəsiz cüzdan qoşulması
-- QMS Testnetinə avtomatik keçid
-- Tək kliklə Storage müqaviləsinin yerləşdirilməsi
+## Features
+- Secure wallet connection via MetaMask
+- Automatic network switch to QMS Testnet
+- One-click deployment of the Storage contract
 
-## Yerləşdirmə (Vercel)
-1. Bu reponu GitHub-a yükləyin
-2. vercel.com → New Project → Repo seç → Deploy
+## Deployment (Vercel)
+1. Push this repository to GitHub
+2. Go to vercel.com → New Project → Select Repository → Deploy
 
-## QMS Testnet Məlumatları
+## QMS Testnet Details
 - Chain ID: 19480 (0x4c18)
 - RPC: https://rpc.testnet.qms.finance
 - Faucet: https://testnet.qwap.xyz/
